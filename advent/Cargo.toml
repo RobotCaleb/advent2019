@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 fuel = { package = "day-1", path = "../day-1"}
-day-2 = {path = "../day-2"}
+intcode = { package = "day-2", path = "../day-2"}
