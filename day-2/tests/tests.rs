@@ -4,7 +4,7 @@ extern crate day_2;
 mod tests {
     fn test(input: Vec<i32>, truth: Vec<i32>) {
         let mut prog = day_2::IntCode::new();
-        prog.load(input);
+        prog.load(&input);
         prog.run();
         assert_eq!(prog.state, truth);
     }

@@ -7,8 +7,8 @@ impl IntCode {
         IntCode { state: vec![] }
     }
 
-    pub fn load(&mut self, input: Vec<i32>) {
-        self.state = input;
+    pub fn load(&mut self, input: &Vec<i32>) {
+        self.state = input.clone();
     }
 
     pub fn run(&mut self) {
