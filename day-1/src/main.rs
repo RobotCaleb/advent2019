@@ -10,25 +10,36 @@ fn main() {
         73229, 56045, 63240, 124091, 103324, 125187, 74027, 120344, 105333, 100939, 131454, 109570,
         149398, 140535, 57379, 138385,
     ];
+
+    println!("{}", sum_fuel(12));
+    println!("{}", sum_fuel(14));
+    println!("{}", sum_fuel(1969));
+    println!("{}", sum_fuel(100756));
+
     let mut fuel = 0i32;
     for mass in inputs {
-        fuel = sum_fuel(fuel, mass);
+        fuel += sum_fuel(mass);
     }
-
-    println!("{}", get_fuel(12));
-    println!("{}", get_fuel(14));
-    println!("{}", get_fuel(1969));
-    println!("{}", get_fuel(100756));
 
     println!("{}", fuel);
 }
 
-fn sum_fuel(last: i32, mass: i32) -> i32 {
-    last + get_fuel(mass)
+fn sum_fuel(mass: i32) -> i32 {
+    let mut sum = 0i32;
+    let mut fuel = get_fuel(mass);
+    while fuel != 0 {
+        let f = fuel;
+        sum += fuel;
+        fuel = get_fuel(f);
+    }
+    sum
 }
 
 fn get_fuel(mass: i32) -> i32 {
     let m1 = mass as f32 / 3.0;
     let m2 = m1.floor() as i32;
-    m2 - 2
+    if m2 - 2 > 0 {
+        return m2 - 2;
+    }
+    0
 }
