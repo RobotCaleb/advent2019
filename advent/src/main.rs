@@ -5,6 +5,7 @@ extern crate vector;
 
 use fuel::fuel_manager;
 use password::password::brute_1;
+use password::password::brute_2;
 
 struct Ship {
     modules_masses: Vec<f32>,
@@ -101,9 +102,15 @@ fn main() {
     let start = ship.password_range.0;
     let end = ship.password_range.1;
     println!(
-        "Passwords in range {}-{}: {}",
+        "Passwords in range first part {}-{}: {}",
         start,
         end,
         brute_1(start, end)
+    );
+    println!(
+        "Passwords in range second part {}-{}: {}",
+        start,
+        end,
+        brute_2(start, end)
     );
 }
