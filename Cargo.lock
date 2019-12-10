@@ -4,15 +4,23 @@
 name = "advent"
 version = "0.1.0"
 dependencies = [
- "day-1 0.1.0",
- "day-2 0.1.0",
+ "fuel 0.1.0",
+ "intcode 0.1.0",
+ "vector 0.1.0",
 ]
 
 [[package]]
-name = "day-1"
+name = "fuel"
+version = "0.1.0"
+dependencies = [
+ "vector 0.1.0",
+]
+
+[[package]]
+name = "intcode"
 version = "0.1.0"
 
 [[package]]
-name = "day-2"
+name = "vector"
 version = "0.1.0"
 

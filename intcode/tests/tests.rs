@@ -1,9 +1,9 @@
-extern crate day_2;
+extern crate intcode;
 
 #[cfg(test)]
 mod tests {
     fn test(input: Vec<i32>, truth: Vec<i32>) {
-        let mut prog = day_2::IntCode::new();
+        let mut prog = intcode::IntCode::new();
         prog.load(&input);
         prog.run();
         assert_eq!(prog.state, truth);

@@ -1,5 +1,5 @@
 [package]
-name = "day-2"
+name = "vector"
 version = "0.1.0"
 authors = ["Caleb Anderson <robotrising@gmail.com>"]
 edition = "2018"
