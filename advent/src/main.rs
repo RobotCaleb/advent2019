@@ -1,14 +1,17 @@
 extern crate fuel;
 extern crate intcode;
+extern crate password;
 extern crate vector;
 
 use fuel::fuel_manager;
+use password::password::brute_1;
 
 struct Ship {
     modules_masses: Vec<f32>,
     gravity_assist_program: Vec<i32>,
     intcode_computer: intcode::IntCode,
     fuel_manager: fuel_manager::FuelManager,
+    password_range: (usize, usize),
 }
 
 impl Ship {
@@ -40,6 +43,7 @@ impl Ship {
             ],
             intcode_computer: intcode::IntCode::new(),
             fuel_manager: fuel_manager::FuelManager::new(),
+            password_range: (197487, 673251),
         }
     }
 }
@@ -92,4 +96,14 @@ fn main() {
         }
         None => println!("No intersections found: {}:{}", file!(), line!()),
     }
+
+    // day 4
+    let start = ship.password_range.0;
+    let end = ship.password_range.1;
+    println!(
+        "Passwords in range {}-{}: {}",
+        start,
+        end,
+        brute_1(start, end)
+    );
 }

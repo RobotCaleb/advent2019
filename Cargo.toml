@@ -3,5 +3,6 @@ members = [
     "advent",
     "vector",
     "fuel",
-    "intcode"
+    "intcode",
+    "password",
 ]
