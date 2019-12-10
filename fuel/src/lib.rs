@@ -23,6 +23,8 @@ pub mod fuel_calculator {
 }
 
 pub mod fuel_manager {
+    use std::fmt;
+
     #[derive(Debug)]
     pub struct FuelManager {
         pub lines: Vec<FuelLine>,
@@ -46,35 +48,72 @@ pub mod fuel_manager {
             self.add_line(fl);
         }
 
-        pub fn get_intersection(&self, first: usize, second: usize) -> Option<vector::Vector2> {
+        pub fn get_all_intersections(
+            &self,
+            first: usize,
+            second: usize,
+        ) -> Option<Vec<vector::Vector2>> {
+            let mut ints = vec![];
             let fl1 = &self.lines[first];
             let fl2 = &self.lines[second];
-            let mut closest = vector::Vector2::new(std::f32::MAX, std::f32::MAX);
             for i1 in 0..fl1.segments.len() {
                 let s1 = &fl1.segments[i1];
                 for i2 in 0..fl2.segments.len() {
                     let s2 = &fl2.segments[i2];
                     let int = s1.get_intersection(&s2);
                     match int {
-                        Some(v) => {
-                            if v == vector::Vector2::new(0.0, 0.0) && i1 == 0 && i2 == 0 {
-                                continue;
-                            }
-                            let dist = vector::Vector2::new(0.0, 0.0).dist_man(&v);
-                            let dist2 = vector::Vector2::new(0.0, 0.0).dist_man(&closest);
-                            if dist < dist2 {
-                                closest = v;
-                            }
-                        }
+                        Some(v) => ints.push(v),
                         None => continue,
                     }
                 }
             }
-
-            if closest == vector::Vector2::new(std::f32::MAX, std::f32::MAX) {
-                return None;
+            if ints.len() > 0 {
+                return Some(ints);
             }
-            Some(closest)
+            None
+        }
+
+        /// Returns Some(v) where v is closest intersection from given list of points.
+        /// None if only one and is origin.
+        pub fn get_closest_intersection(
+            &self,
+            ints: &Vec<vector::Vector2>,
+        ) -> Option<vector::Vector2> {
+            let mut closest = vector::Vector2::new(std::f32::MAX, std::f32::MAX);
+            for i in ints {
+                if *i == vector::Vector2::zero() {
+                    continue;
+                }
+                let dist = vector::Vector2::zero().dist_man(&i);
+                let dist2 = vector::Vector2::zero().dist_man(&closest);
+                if dist < dist2 && dist != 0.0 {
+                    closest = *i;
+                }
+            }
+            if closest != vector::Vector2::new(std::f32::MAX, std::f32::MAX) {
+                return Some(closest);
+            }
+            None
+        }
+
+        pub fn get_dist_to_shortest_walk(
+            &self,
+            ints: &Vec<vector::Vector2>,
+            first: usize,
+            second: usize,
+        ) -> f32 {
+            let mut dist = std::f32::MAX;
+            for i in ints {
+                if *i == vector::Vector2::zero() {
+                    continue;
+                }
+                let d1 = self.lines[first].get_dist_to_point(i).unwrap();
+                let d2 = self.lines[second].get_dist_to_point(i).unwrap();
+                if d1 + d2 < dist {
+                    dist = d1 + d2;
+                }
+            }
+            dist
         }
     }
 
@@ -87,7 +126,7 @@ pub mod fuel_manager {
     impl FuelLine {
         pub fn new() -> FuelLine {
             FuelLine {
-                cur: vector::Vector2::new(0.0, 0.0),
+                cur: vector::Vector2::zero(),
                 segments: vec![],
             }
         }
@@ -113,9 +152,26 @@ pub mod fuel_manager {
             self.add_segment(FuelSegment::new(self.cur, end));
             self.cur = end;
         }
+
+        /// Return distance along fuel line to point.
+        /// None if point not on fuel line.
+        pub fn get_dist_to_point(&self, point: &vector::Vector2) -> Option<f32> {
+            let mut dist = 0.0;
+            for s in &self.segments {
+                match s.point_on_segment(point) {
+                    Some(v) => {
+                        dist += v.mag();
+                        return Some(dist);
+                    }
+                    None => dist += s.length(),
+                }
+            }
+
+            None
+        }
     }
 
-    #[derive(PartialEq, Debug)]
+    #[derive(PartialEq)]
     pub struct FuelSegment {
         pub start: vector::Vector2,
         pub end: vector::Vector2,
@@ -149,6 +205,32 @@ pub mod fuel_manager {
 
             // No collision
             return None;
+        }
+
+        /// Returns Some(v) if point on segment where v is vector from start to point
+        pub fn point_on_segment(&self, point: &vector::Vector2) -> Option<vector::Vector2> {
+            let a = self.start.dist(point) + self.end.dist(point);
+            let b = self.start.dist_man(&self.end);
+            if a == b {
+                return Some(*point - self.start);
+            }
+            None
+        }
+
+        pub fn length(&self) -> f32 {
+            self.start.dist_man(&self.end)
+        }
+    }
+
+    impl fmt::Display for FuelSegment {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Segment {{ start: {}, end: {} }}", self.start, self.end)
+        }
+    }
+
+    impl fmt::Debug for FuelSegment {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Segment {{ start: {}, end: {} }}", self.start, self.end)
         }
     }
 }
