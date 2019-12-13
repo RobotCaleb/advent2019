@@ -20,9 +20,16 @@ dependencies = [
 [[package]]
 name = "intcode"
 version = "0.1.0"
+dependencies = [
+ "simpleuserinput 0.1.0",
+]
 
 [[package]]
 name = "password"
+version = "0.1.0"
+
+[[package]]
+name = "simpleuserinput"
 version = "0.1.0"
 
 [[package]]

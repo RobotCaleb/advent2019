@@ -1,3 +1,5 @@
+use simpleuserinput::simple_user_input::get_input;
+
 pub struct IntCode {
     pub state: Vec<i32>,
 }
@@ -15,21 +17,38 @@ impl IntCode {
         let mut pc: usize = 0;
         loop {
             let opcode = self.state[pc];
+            let mut step = 0;
             match opcode {
-                1 => self.add(
-                    self.state[pc + 1] as usize,
-                    self.state[pc + 2] as usize,
-                    self.state[pc + 3] as usize,
-                ),
-                2 => self.mul(
-                    self.state[pc + 1] as usize,
-                    self.state[pc + 2] as usize,
-                    self.state[pc + 3] as usize,
-                ),
+                1 => {
+                    // add from first two parameters, store at 3rd
+                    self.add(
+                        self.state[pc + 1] as usize,
+                        self.state[pc + 2] as usize,
+                        self.state[pc + 3] as usize,
+                    );
+                    step = 4;
+                }
+                2 => {
+                    // multiply from first two parameters, store at 3rd
+                    self.mul(
+                        self.state[pc + 1] as usize,
+                        self.state[pc + 2] as usize,
+                        self.state[pc + 3] as usize,
+                    );
+                    step = 4;
+                }
+                3 => {
+                    // get input, store at 2nd
+                    let index = self.state[pc + 1] as usize;
+                    let input = get_input("Input: ").parse::<i32>().unwrap();
+                    println!("Input was: {}", input);
+                    self.state[index] = input;
+                    step = 2;
+                }
                 99 => return,
                 _ => println!("Error at index {} found {}", pc, opcode),
             }
-            pc += 4;
+            pc += step;
         }
     }
 

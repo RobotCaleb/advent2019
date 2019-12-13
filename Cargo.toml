@@ -5,4 +5,5 @@ members = [
     "fuel",
     "intcode",
     "password",
+    "simpleuserinput",
 ]
