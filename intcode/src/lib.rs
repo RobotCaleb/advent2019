@@ -41,8 +41,14 @@ impl IntCode {
                     // get input, store at 2nd
                     let index = self.state[pc + 1] as usize;
                     let input = get_input("Input: ").parse::<i32>().unwrap();
-                    println!("Input was: {}", input);
                     self.state[index] = input;
+                    step = 2;
+                }
+                4 => {
+                    // output value at 2nd
+                    let index = self.state[pc + 1] as usize;
+                    let val = self.state[index];
+                    println!("{}", val);
                     step = 2;
                 }
                 99 => return,

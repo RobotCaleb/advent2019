@@ -41,7 +41,14 @@ mod tests {
     }
 
     // #[test]
+    // // input value of 1 for test to pass
     // fn test_computer_input_6() {
     //     test(vec![3, 3, 99, 0], vec![3, 3, 99, 1]);
+    // }
+
+    // #[test]
+    // // input value of 1 for test to pass
+    // fn test_computer_input_output_6() {
+    //     test(vec![3, 0, 4, 0, 99], vec![1, 0, 4, 0, 99]);
     // }
 }
