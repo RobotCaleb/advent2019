@@ -53,6 +53,7 @@ impl IntCode {
                     // output value at 2nd
                     let index = self.state[pc + 1];
                     let val = self.get_at(index, param_modes[0]);
+                    println!("{}", val);
                     step = 2;
                 }
                 99 => return,
