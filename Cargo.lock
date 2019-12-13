@@ -11,6 +11,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "digits"
+version = "0.1.0"
+
+[[package]]
 name = "fuel"
 version = "0.1.0"
 dependencies = [
@@ -21,12 +25,16 @@ dependencies = [
 name = "intcode"
 version = "0.1.0"
 dependencies = [
+ "digits 0.1.0",
  "simpleuserinput 0.1.0",
 ]
 
 [[package]]
 name = "password"
 version = "0.1.0"
+dependencies = [
+ "digits 0.1.0",
+]
 
 [[package]]
 name = "simpleuserinput"

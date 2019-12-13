@@ -1,4 +1,6 @@
 pub mod password {
+    use digits::digits::get_digits;
+
     pub fn brute_1(start: usize, end: usize) -> usize {
         let mut possible = vec![];
         for i in start..end + 1 {
@@ -16,18 +18,6 @@ pub mod password {
             }
         }
         possible.len()
-    }
-
-    fn get_digits(input: usize) -> Vec<usize> {
-        let mut ds = vec![];
-        let mut i = input;
-        while i > 0 {
-            ds.push(i % 10);
-            i = i / 10;
-        }
-
-        ds.reverse();
-        ds
     }
 
     fn contains_double(input: usize) -> bool {
@@ -95,7 +85,7 @@ pub mod password {
     mod tests {
         #[test]
         fn get_digits() {
-            let digits = super::get_digits(12345);
+            let digits = digits::digits::get_digits(12345);
             assert_eq!(digits, vec![1, 2, 3, 4, 5]);
         }
         #[test]

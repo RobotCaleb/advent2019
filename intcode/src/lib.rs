@@ -18,12 +18,17 @@ impl IntCode {
         loop {
             let opcode = self.state[pc];
             let mut step = 0;
-            match opcode {
+            let opi = opcode % 100;
+            let a = ((opcode / 10000) % 10) as u32;
+            let b = ((opcode / 1000) % 10) as u32;
+            let c = ((opcode / 100) % 10) as u32;
+            let param_modes = vec![c, b, a];
+            match opi {
                 1 => {
                     // add from first two parameters, store at 3rd
                     self.add(
-                        self.state[pc + 1] as usize,
-                        self.state[pc + 2] as usize,
+                        self.get_at(self.state[pc + 1], param_modes[0]),
+                        self.get_at(self.state[pc + 2], param_modes[1]),
                         self.state[pc + 3] as usize,
                     );
                     step = 4;
@@ -31,8 +36,8 @@ impl IntCode {
                 2 => {
                     // multiply from first two parameters, store at 3rd
                     self.mul(
-                        self.state[pc + 1] as usize,
-                        self.state[pc + 2] as usize,
+                        self.get_at(self.state[pc + 1], param_modes[0]),
+                        self.get_at(self.state[pc + 2], param_modes[1]),
                         self.state[pc + 3] as usize,
                     );
                     step = 4;
@@ -46,8 +51,8 @@ impl IntCode {
                 }
                 4 => {
                     // output value at 2nd
-                    let index = self.state[pc + 1] as usize;
-                    let val = self.state[index];
+                    let index = self.state[pc + 1];
+                    let val = self.get_at(index, param_modes[0]);
                     println!("{}", val);
                     step = 2;
                 }
@@ -58,11 +63,22 @@ impl IntCode {
         }
     }
 
-    fn add(&mut self, a: usize, b: usize, index: usize) {
-        self.state[index] = self.state[a] + self.state[b];
+    fn get_at(&self, at: i32, mode: u32) -> i32 {
+        match mode {
+            0 => self.state[at as usize],
+            1 => at as i32,
+            _ => {
+                println!("Unexpected mode: {}", mode);
+                std::process::exit(1);
+            }
+        }
     }
 
-    fn mul(&mut self, a: usize, b: usize, index: usize) {
-        self.state[index] = self.state[a] * self.state[b];
+    fn add(&mut self, a: i32, b: i32, index: usize) {
+        self.state[index] = a + b;
+    }
+
+    fn mul(&mut self, a: i32, b: i32, index: usize) {
+        self.state[index] = a * b;
     }
 }

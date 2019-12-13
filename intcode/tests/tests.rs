@@ -40,6 +40,12 @@ mod tests {
         );
     }
 
+    #[test]
+    fn test_param_modes() {
+        test(vec![1002, 4, 3, 4, 33], vec![1002, 4, 3, 4, 99]);
+        test(vec![2, 4, 3, 5, 99, 0], vec![2, 4, 3, 5, 99, 5 * 99]);
+    }
+
     // #[test]
     // // input value of 1 for test to pass
     // fn test_computer_input_6() {
