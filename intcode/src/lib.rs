@@ -57,7 +57,7 @@ impl IntCode {
                     // output value at 2nd
                     let index = self.state[pc + 1];
                     let val = self.get_at(index, &param_modes[0]);
-                    println!("{}", val);
+                    println!("Output: {}", val);
                     pc += 2;
                 }
                 // 5 => {
