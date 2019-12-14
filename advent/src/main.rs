@@ -104,19 +104,19 @@ fn main() {
 
     // day 2
     ship.intcode_computer.load(&ship.gravity_assist_program);
-    ship.intcode_computer.state[1] = 12;
-    ship.intcode_computer.state[2] = 2;
+    ship.intcode_computer.get_state()[1] = 12;
+    ship.intcode_computer.get_state()[2] = 2;
     ship.intcode_computer.run();
-    println!("Gravity state: {}", ship.intcode_computer.state[0]);
+    println!("Gravity state: {}", ship.intcode_computer.get_state()[0]);
 
     // day 2
     for n in 0..100 {
         for v in 0..100 {
             ship.intcode_computer.load(&ship.gravity_assist_program);
-            ship.intcode_computer.state[1] = n;
-            ship.intcode_computer.state[2] = v;
+            ship.intcode_computer.get_state()[1] = n;
+            ship.intcode_computer.get_state()[2] = v;
             ship.intcode_computer.run();
-            if ship.intcode_computer.state[0] == 19690720 {
+            if ship.intcode_computer.get_state()[0] == 19690720 {
                 println!("Found noun: {} and verb: {}", n, v);
                 println!("100 * noun + verb = {}", 100 * n + v);
                 break;
