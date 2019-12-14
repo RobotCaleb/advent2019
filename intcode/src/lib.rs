@@ -190,7 +190,7 @@ impl IntCode {
                 // less than
                 let a = self.get_at(self.state[self.pc + 1], &param_modes[0]);
                 let b = self.get_at(self.state[self.pc + 2], &param_modes[1]);
-                let pos = self.get_at(self.state[self.pc + 3], &param_modes[2]) as usize;
+                let pos = self.state[self.pc + 3] as usize;
                 if a < b {
                     self.state[pos] = 1
                 } else {
@@ -203,7 +203,7 @@ impl IntCode {
                 // equals
                 let a = self.get_at(self.state[self.pc + 1], &param_modes[0]);
                 let b = self.get_at(self.state[self.pc + 2], &param_modes[1]);
-                let pos = self.get_at(self.state[self.pc + 3], &param_modes[2]) as usize;
+                let pos = self.state[self.pc + 3] as usize;
                 if a == b {
                     println!("Writing 1 to position {}", pos);
                     self.state[pos] = 1

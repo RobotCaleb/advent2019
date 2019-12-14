@@ -79,6 +79,25 @@ mod tests {
 
     #[test]
     fn test_equal_1() {
-        test_output(vec![3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8], 1, Some(1));
+        test_output(vec![3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8], 0, Some(1));
+        test_output(vec![3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8], 1, Some(8));
+    }
+
+    #[test]
+    fn test_less_than_1() {
+        test_output(vec![3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8], 1, Some(7));
+        test_output(vec![3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8], 0, Some(9));
+    }
+
+    #[test]
+    fn test_equal_2() {
+        test_output(vec![3, 3, 1108, -1, 8, 3, 4, 3, 99], 1, Some(8));
+        test_output(vec![3, 3, 1108, -1, 8, 3, 4, 3, 99], 0, Some(7));
+    }
+
+    #[test]
+    fn test_less_than_2() {
+        test_output(vec![3, 3, 1107, -1, 8, 3, 4, 3, 99], 1, Some(7));
+        test_output(vec![3, 3, 1107, -1, 8, 3, 4, 3, 99], 0, Some(9));
     }
 }
