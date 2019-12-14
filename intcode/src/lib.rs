@@ -174,16 +174,21 @@ impl IntCode {
                 let val = self.get_at(self.state[self.pc + 2], &param_modes[1]);
                 if check != 0 {
                     self.pc = val as usize;
+                    return;
                 }
+                self.pc += 3;
             }
             6 => {
                 println!("handling 6");
-                // jump if true
+                // jump if false
                 let check = self.get_at(self.state[self.pc + 1], &param_modes[0]);
                 let val = self.get_at(self.state[self.pc + 2], &param_modes[1]);
+                println!("Comparing {}:{}", check, val);
                 if check == 0 {
                     self.pc = val as usize;
+                    return;
                 }
+                self.pc += 3;
             }
             7 => {
                 println!("handling 7");
