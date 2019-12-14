@@ -158,9 +158,11 @@ fn main() {
     );
 
     // day 5
-
-    // day 2
     ship.intcode_computer.load(&ship.diagnostics_program);
-    ship.intcode_computer.run();
-    // println!("Diagnostics output: {}", ship.intcode_computer.state[0]);
+    while !ship.intcode_computer.get_halted() {
+        ship.intcode_computer.step();
+        if !ship.intcode_computer.get_output_was_read() {
+            println!("Diagnostics output: {}", ship.intcode_computer.get_output());
+        }
+    }
 }

@@ -23,6 +23,7 @@ impl InputProcessor {
         self.value = value;
     }
     pub fn get_value(&mut self) -> i32 {
+        println!("Getting value. Current read is {}", self.read);
         if !self.read {
             self.read = true;
             return self.value;
@@ -83,6 +84,8 @@ impl IntCode {
 
     pub fn load(&mut self, input: &Vec<i32>) {
         self.state = input.clone();
+        self.halted = false;
+        self.pc = 0;
     }
 
     pub fn set_input(&mut self, input: i32) {
@@ -113,6 +116,9 @@ impl IntCode {
     pub fn run(&mut self) {
         while !self.get_halted() {
             self.step();
+            if !self.get_output_was_read() {
+                println!("Output: {}", self.get_output());
+            }
         }
     }
 
@@ -129,7 +135,6 @@ impl IntCode {
         let param_modes = vec![self.get_mode(c), self.get_mode(b), self.get_mode(a)];
         match opi {
             1 => {
-                println!("handling 1");
                 // add from first two parameters, store at 3rd
                 self.add(
                     self.get_at(self.state[self.pc + 1], &param_modes[0]),
@@ -139,7 +144,6 @@ impl IntCode {
                 self.pc += 4;
             }
             2 => {
-                println!("handling 2");
                 // multiply from first two parameters, store at 3rd
                 self.mul(
                     self.get_at(self.state[self.pc + 1], &param_modes[0]),
@@ -149,7 +153,6 @@ impl IntCode {
                 self.pc += 4;
             }
             3 => {
-                println!("handling 3");
                 // get input, store at 2nd
                 let index = self.state[self.pc + 1] as usize;
                 let input = self.input.get_value();
@@ -157,18 +160,13 @@ impl IntCode {
                 self.pc += 2;
             }
             4 => {
-                println!("handling 4");
                 // output value at 2nd
-                // todo: signal that output is available
                 let index = self.state[self.pc + 1];
                 let val = self.get_at(index, &param_modes[0]);
-                println!("read from {}, value is {}", index, val);
-                println!("Output: {}", val);
                 self.output.set_value(val);
                 self.pc += 2;
             }
             5 => {
-                println!("handling 5");
                 // jump if true
                 let check = self.get_at(self.state[self.pc + 1], &param_modes[0]);
                 let val = self.get_at(self.state[self.pc + 2], &param_modes[1]);
@@ -179,11 +177,9 @@ impl IntCode {
                 self.pc += 3;
             }
             6 => {
-                println!("handling 6");
                 // jump if false
                 let check = self.get_at(self.state[self.pc + 1], &param_modes[0]);
                 let val = self.get_at(self.state[self.pc + 2], &param_modes[1]);
-                println!("Comparing {}:{}", check, val);
                 if check == 0 {
                     self.pc = val as usize;
                     return;
@@ -191,7 +187,6 @@ impl IntCode {
                 self.pc += 3;
             }
             7 => {
-                println!("handling 7");
                 // less than
                 let a = self.get_at(self.state[self.pc + 1], &param_modes[0]);
                 let b = self.get_at(self.state[self.pc + 2], &param_modes[1]);
@@ -204,16 +199,13 @@ impl IntCode {
                 self.pc += 4;
             }
             8 => {
-                println!("handling 8");
                 // equals
                 let a = self.get_at(self.state[self.pc + 1], &param_modes[0]);
                 let b = self.get_at(self.state[self.pc + 2], &param_modes[1]);
                 let pos = self.state[self.pc + 3] as usize;
                 if a == b {
-                    println!("Writing 1 to position {}", pos);
                     self.state[pos] = 1
                 } else {
-                    println!("Writing 0 to position {}", pos);
                     self.state[pos] = 0
                 }
                 self.pc += 4;
