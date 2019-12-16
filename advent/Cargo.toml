@@ -11,3 +11,4 @@ fuel = { path = "../fuel" }
 intcode = { path = "../intcode" }
 vector = { path = "../vector" }
 password = { path = "../password" }
+orbitmapper = { path = "../orbitmapper" }
