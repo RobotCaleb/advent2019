@@ -1,7 +1,9 @@
 pub mod orbitmapper {
     use petgraph::{
+        algo::astar,
         dot::{Config, Dot},
-        graphmap::DiGraphMap,
+        graphmap::{DiGraphMap, UnGraphMap},
+        visit::EdgeRef,
         Direction,
     };
 
@@ -35,9 +37,9 @@ pub mod orbitmapper {
             self.orbit_graph = DiGraphMap::<&str, i32>::from_edges(&edges);
         }
 
-        pub fn parse_orbit_pair(pair: &str) -> (&str, &str) {
+        pub fn parse_orbit_pair(pair: &str) -> (&str, &str, i32) {
             let splits: Vec<&str> = pair.split(")").collect();
-            (splits[0], splits[1])
+            (splits[0], splits[1], 1)
         }
 
         pub fn get_dot(&self) -> String {
@@ -67,6 +69,24 @@ pub mod orbitmapper {
                 sum += self.count_orbits_recursive(&neighbor, depth + 1)
             }
             sum
+        }
+
+        pub fn get_shortest_path(&self, from: &'a str, to: &'a str) -> Option<(i32, Vec<&'a str>)> {
+            let edges = self.orbit_graph.all_edges();
+            let graph: UnGraphMap<&'a str, i32> = UnGraphMap::from_edges(edges);
+            astar(&graph, from, |end| end == to, |e| *e.weight(), |_| 0)
+        }
+
+        pub fn get_orbit_transfer(
+            &self,
+            from: &'a str,
+            to: &'a str,
+        ) -> Option<(i32, Vec<&'a str>)> {
+            let transfer = self.get_shortest_path(from, to);
+            if let Some((d, p)) = transfer {
+                return Some((d - 2, p[1..p.len() - 1].to_vec()));
+            }
+            None
         }
     }
 }

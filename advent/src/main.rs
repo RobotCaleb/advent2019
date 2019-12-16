@@ -76,6 +76,8 @@ fn main() {
 
     // day 5
     ship.intcode_computer.load(&ship.diagnostics_program);
+    // send 5 to diagnostics check
+    ship.intcode_computer.set_input(5);
     while !ship.intcode_computer.get_halted() {
         ship.intcode_computer.step();
         if !ship.intcode_computer.get_output_was_read() {
@@ -87,4 +89,9 @@ fn main() {
     ship.orbit_mapper.load_orbits(&ship.map_data);
     let orbits = ship.orbit_mapper.count_orbits();
     println!("Counted {} orbits", orbits);
+    if let Some((dist, _)) = ship.orbit_mapper.get_orbit_transfer("YOU", "SAN") {
+        println!("Orbital transfers from ship to Santa: {}", dist);
+    } else {
+        println!("Something is wrong, can't find a path to Santa");
+    }
 }
